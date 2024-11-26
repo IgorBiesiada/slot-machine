@@ -12,14 +12,14 @@ const SYMBOLS_COUNT = {
     B: 4,
     C: 6,
     D: 8
-}
+};
 
 const SYMBOL_VALUES = {
     A: 5,
     B: 4,
     C: 3,
     D: 2
-}
+};
 
 
 const deposit = () => {
@@ -35,7 +35,7 @@ const deposit = () => {
     }
 };
 
-const getNumberOfLInes = () => {
+const getNumberOfLines = () => {
     while (true) {    
         const lines = prompt("Enter number of lines: ");
         const numberOfLines = parseFloat(lines);
@@ -93,16 +93,16 @@ const transpose = (reels) => {
             rows[i].push(reels[j][i]);
         }
     }
-    return rows
+    return rows;
 };
 
 const printRows = (rows) => {
     for (const row of rows) {
         let rowString = "";
-        for (const [i, symbol] of rows.entries()) {
+        for (const [i, symbol] of row.entries()) {
             rowString += symbol;
             if (i != rows.length - 1) {
-                rowString += " | "
+                rowString += " | ";
             }
         }
         console.log(rowString);
@@ -127,13 +127,33 @@ const getWinnings = (rows, bet, lines) => {
             winnings += bet * SYMBOL_VALUES[symbols[0]];
         }
     }
-    return winnings    
+    return winnings;    
 };
 
-let balance = deposit();
-const numberOfLines = getNumberOfLInes()
-const bet = getBet(balance, numberOfLines)
-const reels = spin();
-const rows = transpose(reels);
-printRows(rows);
-const winnings = getWinnings(rows, bet, lines)
+
+const game = () =>{
+    let balance = deposit();
+    
+    while (true) {
+    console.log("You have a balance of $" + balance);
+    const numberOfLines = getNumberOfLines();
+    const bet = getBet(balance, numberOfLines);
+    balance -= bet * numberOfLines;
+    const reels = spin();
+    const rows = transpose(reels);
+    printRows(rows);
+    const winnings = getWinnings(rows, bet, numberOfLines);
+    console.log("you won, $" + winnings.toString());
+    
+    if (balance <= 0) {
+        console.log("You ran out of money");
+        break;
+    }
+    
+    const playAgain = prompt("Do you want play again (y/n)")
+    
+    if (playAgain != "y") break;
+    }
+;}
+
+module.exports = game()
